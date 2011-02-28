@@ -1,0 +1,46 @@
+verbosity: normal
+priority: lowest
+
+# Available abilities:
+# WATERPROOF
+# FIREPROOF
+# BOMBPROOF
+# FEATHERWEIGHT
+# INVINCIBLE
+#
+# For each ability, specify a required item
+# for head, body, legs, feet and hand.
+# Each component is optional.
+# For a list of available items, see http://cliqr.org/V
+
+powerarmour:
+
+    WATERPROOF:
+        head: LEATHER_HELMET
+        body: LEATHER_CHESTPLATE
+        legs: LEATHER_LEGGINGS
+        feet: LEATHER_BOOTS
+
+    FIREPROOF:
+        body: GOLD_CHESTPLATE
+        legs: GOLD_LEGGINGS
+        feet: GOLD_LEGGINGS
+        hand: WATER_BUCKET
+
+    BOMBPROOF:
+        head: IRON_HELMET
+        body: IRON_CHESTPLATE
+        legs: IRON_LEGGINGS
+        feet: IRON_BOOTS
+
+    FEATHERWEIGHT:
+        feet: LEATHER_BOOTS
+        hand: FEATHER
+
+    INVINCIBLE:
+        head: DIAMOND_HELMET
+        body: DIAMOND_CHESTPLATE
+        legs: DIAMOND_LEGGINGS
+        feet: DIAMOND_BOOTS
+        hand: DIAMOND_SWORD
+
