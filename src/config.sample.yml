@@ -1,0 +1,82 @@
+# Set this to "low" to reduce number of boot messages
+verbosity: normal
+
+# Try adjusting this if you have compatibility problems with other plguins.
+# Default: "lowest". Can also use "low", "normal", "high", "highest".
+priority: lowest
+
+powerarmour:
+##########
+# This is a sample configuration file for PowerArmour
+# Configuration blocks are set out as followed:
+#
+# NAME_OF_ABILITY:
+#     head: HEAD_ITEM
+#     body: CHEST_ITEM
+#     legs: LEG_ITEM
+#     feet: BOOTS_ITEM
+#     hand: ANY_ITEM
+#
+# Every item is optional, so you can specify
+# e.g. need only wear a gold helmet and any item
+# is OK in the other slots.
+#
+# For lists of appropriate values for
+# blocks and tools, see: http://cliqr.org/V
+#
+# Abilities that you can use are:
+#     FIREPROOF (Unhurt by flames and lava)
+#     WATERPROOF (Cannot drown)
+#     BOMBPROOF (Creepers and TNT explosions do no damage)
+#     MONSTERPROOF (Immune to zombies, skeletons, spiders and other players - not Creepers!)
+#     FEATHERWEIGHT (No fall damage)
+#     INVINCIBLE (Nothing can hurt you!)
+#
+# Uncomment any of the blocks below to see some example
+# behaviours
+#
+##########
+# Leather armour is a wetsuit
+###
+#    WATERPROOF:
+#        head: LEATHER_HELMET
+#        body: LEATHER_CHESTPLATE
+#        legs: LEATHER_LEGGINGS
+#        feet: LEATHER_BOOTS
+#
+##########
+# Gold armour (except head) is flame retardant,
+# plus a bucket of water for cooling
+###
+#    FIREPROOF:
+#        body: GOLD_CHESTPLATE
+#        legs: GOLD_LEGGINGS
+#        feet: GOLD_LEGGINGS
+#        hand: WATER_BUCKET
+#
+##########
+# Did you know ordanance disposal armour is made of iron?
+###
+#    BOMBPROOF:
+#        head: IRON_HELMET
+#        body: IRON_CHESTPLATE
+#        legs: IRON_LEGGINGS
+#        feet: IRON_BOOTS
+#
+##########
+# Running boots and wings...
+###
+#    FEATHERWEIGHT:
+#        feet: LEATHER_BOOTS
+#        hand: FEATHER
+#
+##########
+# Massively overpowered diamond set!
+###
+#    INVINCIBLE:
+#        head: DIAMOND_HELMET
+#        body: DIAMOND_CHESTPLATE
+#        legs: DIAMOND_LEGGINGS
+#        feet: DIAMOND_BOOTS
+#        hand: DIAMOND_SWORD
+##########
