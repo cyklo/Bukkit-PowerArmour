@@ -8,4 +8,17 @@ public class PowerArmourComponents {
 	public Material legs;
 	public Material feet;
 	public Material hand;
+	
+	public String toString() {
+		
+		String retval = "{";
+		
+		retval += "head=" + head + ";";
+		retval += "body=" + body + ";";
+		retval += "legs=" + legs + ";";
+		retval += "feet=" + feet + ";";
+		retval += "hand=" + hand + "}";
+		
+		return retval;
+	}
 }
