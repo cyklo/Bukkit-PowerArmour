@@ -13,6 +13,8 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
+import com.sargant.bukkit.common.Common;
+
 public class PowerArmour extends JavaPlugin {
 	
 	protected Map<PowerArmourAbilities, PowerArmourComponents> armourList;
@@ -53,29 +55,14 @@ public class PowerArmour extends JavaPlugin {
 		}
 		
 		// Load in the values from the configuration file
-		List <String> keys;
-		try { 
-			keys = getConfiguration().getKeys(null); 
-		} catch(NullPointerException ex) {
+		verbosity = Common.getVerbosity(this);
+		pri = Common.getPriority(this);
+		
+		List <String> keys = Common.getRootKeys(this);
+		
+		if(keys == null) {
 			log.warning(getDescription().getName() + ": no parent key not found");
 			return;
-		}
-		
-		if(keys.contains("verbosity")) {
-			String verb_string = getConfiguration().getString("verbosity", "normal");
-			
-			if(verb_string.equalsIgnoreCase("low")) { verbosity = 1; }
-			else if(verb_string.equalsIgnoreCase("high")) { verbosity = 3; }
-			else { verbosity = 2; }
-		}
-		
-		if(keys.contains("priority")) {
-			String priority_string = getConfiguration().getString("priority", "lowest");
-			if(priority_string.equalsIgnoreCase("low")) { pri = Priority.Low; }
-			else if(priority_string.equalsIgnoreCase("normal")) { pri = Priority.Normal; }
-			else if(priority_string.equalsIgnoreCase("high")) { pri = Priority.High; }
-			else if(priority_string.equalsIgnoreCase("highest")) { pri = Priority.Highest; }
-			else { pri = Priority.Lowest; }
 		}
 		
 		if(!keys.contains("powerarmour"))
