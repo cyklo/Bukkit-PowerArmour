@@ -46,7 +46,7 @@ public class PowerArmourEntityListener extends EntityListener
 			if(c.body != Material.AIR && loadout.body != c.body) { continue; }
 			if(c.legs != Material.AIR && loadout.legs != c.legs) { continue; }
 			if(c.feet != Material.AIR && loadout.feet != c.feet) { continue; }
-			if(c.hand != Material.AIR && loadout.hand != c.hand) { parent.log.info("failed on hand check - wanted " + c.hand + ", got" + loadout.hand); continue; }
+			if(c.hand != Material.AIR && loadout.hand != c.hand) { continue; }
 
 			// The loadout is correct for the current power ability
 			// Does the current damage type match a corresponding proof-ness?
