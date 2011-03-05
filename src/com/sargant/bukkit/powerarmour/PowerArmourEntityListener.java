@@ -35,8 +35,6 @@ public class PowerArmourEntityListener extends EntityListener
 		loadout.legs = human.getInventory().getLeggings().getType();
 		loadout.feet = human.getInventory().getBoots().getType();
 		loadout.hand = human.getItemInHand().getType();
-		
-		parent.log.info(parent.armourList.keySet().toString());
 
 		for(PowerArmourAbilities a : parent.armourList.keySet()) {
 			
