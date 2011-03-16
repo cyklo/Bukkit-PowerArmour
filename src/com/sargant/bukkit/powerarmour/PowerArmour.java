@@ -84,6 +84,7 @@ public class PowerArmour extends JavaPlugin {
 			pac.legs = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".legs", "AIR"));
 			pac.feet = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".feet", "AIR"));
 			pac.hand = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".hand", "AIR"));
+			pac.armourdamage = getConfiguration().getBoolean("powerarmour." + paa.toString() + ".armourdamage", false);
 			
 			armourList.put(paa, pac);
 			
@@ -97,5 +98,4 @@ public class PowerArmour extends JavaPlugin {
 		
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
-
 }

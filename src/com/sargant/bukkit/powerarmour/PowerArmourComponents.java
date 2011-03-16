@@ -8,6 +8,7 @@ public class PowerArmourComponents {
 	public Material legs;
 	public Material feet;
 	public Material hand;
+	public Boolean armourdamage;
 	
 	public String toString() {
 		
