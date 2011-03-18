@@ -1,4 +1,4 @@
-// OtherBlocks - a Bukkit plugin
+// PowerArmour - a Bukkit plugin
 // Copyright (C) 2011 Robert Sargant
 //
 // This program is free software: you can redistribute it and/or modify
