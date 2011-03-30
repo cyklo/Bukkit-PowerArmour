@@ -16,7 +16,6 @@
 
 package com.sargant.bukkit.powerarmour;
 
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
@@ -51,11 +50,8 @@ public class PowerArmourEntityListener extends EntityListener
 			
 			PowerArmourComponents c = parent.armourList.get(a);
 
-			if(c.head != Material.AIR && loadout.head != c.head) continue;
-			if(c.body != Material.AIR && loadout.body != c.body) continue;
-			if(c.legs != Material.AIR && loadout.legs != c.legs) continue;
-			if(c.feet != Material.AIR && loadout.feet != c.feet) continue;
-			if(c.hand != Material.AIR && loadout.hand != c.hand) continue;
+			// Check loadout matches
+			if(!c.compare(loadout)) continue;
 
 			// The loadout is correct for the current power ability
 			// Does the current damage type match a corresponding proof-ness?

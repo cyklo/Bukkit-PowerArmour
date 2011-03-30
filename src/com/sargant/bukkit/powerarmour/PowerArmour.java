@@ -110,7 +110,7 @@ public class PowerArmour extends JavaPlugin {
 		}
 		
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, pri, this);
+		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, pri, this);
 		
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}

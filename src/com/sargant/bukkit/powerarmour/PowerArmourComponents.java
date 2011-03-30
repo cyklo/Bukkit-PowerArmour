@@ -38,4 +38,16 @@ public class PowerArmourComponents {
 		
 		return retval;
 	}
+	
+	public boolean compare(PowerArmourComponents test) {
+	    
+	    if(this.head != Material.AIR && this.head != test.head) return false;
+	    if(this.body != Material.AIR && this.body != test.body) return false;
+	    if(this.legs != Material.AIR && this.legs != test.legs) return false;
+	    if(this.feet != Material.AIR && this.feet != test.feet) return false;
+	    if(this.hand != Material.AIR && this.hand != test.hand) return false;
+	    
+	    return true;
+	    
+	}
 }
