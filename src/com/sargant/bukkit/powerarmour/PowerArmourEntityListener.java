@@ -17,6 +17,7 @@
 package com.sargant.bukkit.powerarmour;
 
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 import org.bukkit.inventory.PlayerInventory;
@@ -37,7 +38,7 @@ public class PowerArmourEntityListener extends EntityListener
 		if(event.isCancelled()) return;
 		if(!(event.getEntity() instanceof HumanEntity)) return;
 
-		HumanEntity human = (HumanEntity) event.getEntity();
+		Player human = (Player) event.getEntity();
 		PowerArmourComponents loadout = new PowerArmourComponents();
 
 		loadout.head = human.getInventory().getHelmet().getType();
