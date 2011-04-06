@@ -16,11 +16,8 @@
 
 package com.sargant.bukkit.powerarmour;
 
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.*;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.sargant.bukkit.powerarmour.PowerArmour;
@@ -53,55 +50,54 @@ public class PowerArmourEntityListener extends EntityListener
 			PowerArmourComponents c = parent.armourList.get(name);
 
 			// Check loadout matches
-			if(!c.compareComponents(c)) continue;
+			if(!c.compareComponents(loadout)) continue;
 
 			// The loadout is correct for the current power ability
 			// Does the current damage type match a corresponding proof-ness?
-			DamageCause d =  event.getCause();
+			EntityDamageEvent.DamageCause d =  event.getCause();
 			
-			if(d == DamageCause.FIRE_TICK) d = DamageCause.FIRE;
+			if(d == EntityDamageEvent.DamageCause.FIRE_TICK) d = EntityDamageEvent.DamageCause.FIRE;
 			
 			if(c.containsProtection("DAMAGE_" + d.toString())) {
 				
 				event.setCancelled(true);
 				
 				// Reset ticker on fire-based events
-				if(d == DamageCause.FIRE) human.setFireTicks(0);
+				if(d == EntityDamageEvent.DamageCause.FIRE) human.setFireTicks(0);
 				
 				// Increase armour / tool damage 
-				if(c.armourdamage) {
-					
-					Integer dmg = event.getDamage();
-					PlayerInventory i = human.getInventory();
-					
-					// Helmet
-					i.getHelmet().setDurability((short) (i.getHelmet().getDurability() + dmg));
-					if(i.getHelmet().getDurability() > i.getHelmet().getType().getMaxDurability()) {
-						i.setHelmet(null);
-					}
-					
-					// Chestplate
-					i.getChestplate().setDurability((short) (i.getChestplate().getDurability() + dmg));
-					if(i.getChestplate().getDurability() > i.getChestplate().getType().getMaxDurability()) {
-						i.setChestplate(null);
-					}
-					
-					// Leggings
-					i.getLeggings().setDurability((short) (i.getLeggings().getDurability() + dmg));
-					if(i.getLeggings().getDurability() > i.getLeggings().getType().getMaxDurability()) {
-						i.setLeggings(null);
-					}
-					
-					// Boots
-					i.getBoots().setDurability((short) (i.getBoots().getDurability() + dmg));
-					if(i.getBoots().getDurability() > i.getBoots().getType().getMaxDurability()) {
-						i.setBoots(null);
-					}
-				}
+				if(c.armourdamage) runDamages(human.getInventory(), event.getDamage());
 				
 				return;
 			}
 		}
+	}
+	
+	private void runDamages(PlayerInventory i, Integer dmg) {
+        
+        // Helmet
+        i.getHelmet().setDurability((short) (i.getHelmet().getDurability() + dmg));
+        if(i.getHelmet().getDurability() > i.getHelmet().getType().getMaxDurability()) {
+            i.setHelmet(null);
+        }
+        
+        // Chestplate
+        i.getChestplate().setDurability((short) (i.getChestplate().getDurability() + dmg));
+        if(i.getChestplate().getDurability() > i.getChestplate().getType().getMaxDurability()) {
+            i.setChestplate(null);
+        }
+        
+        // Leggings
+        i.getLeggings().setDurability((short) (i.getLeggings().getDurability() + dmg));
+        if(i.getLeggings().getDurability() > i.getLeggings().getType().getMaxDurability()) {
+            i.setLeggings(null);
+        }
+        
+        // Boots
+        i.getBoots().setDurability((short) (i.getBoots().getDurability() + dmg));
+        if(i.getBoots().getDurability() > i.getBoots().getType().getMaxDurability()) {
+            i.setBoots(null);
+        }
 	}
 }
 

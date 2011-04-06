@@ -16,9 +16,11 @@
 
 package com.sargant.bukkit.powerarmour;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class PowerArmourComponents {
@@ -32,6 +34,14 @@ public class PowerArmourComponents {
 	public Boolean armourdamage;
 	
 	private List<String> protections;
+	
+	public PowerArmourComponents() {
+	    protections = new ArrayList<String>();
+	}
+	
+	public String toString() {
+	    return "head=" + head.toString() + ";body=" + body.toString() + ";legs=" + legs.toString() + ";feet=" + feet.toString() + ";hand=" + hand.toString();
+	}
 	
 	public boolean compareComponents(PowerArmourComponents test) {
 		
@@ -48,7 +58,16 @@ public class PowerArmourComponents {
 	}
 	
 	public void addProtection(String p) {
-		if(this.isValidProtection(p) && !this.protections.contains(p)) this.protections.add(p);
+	    
+	    // Recursive values
+	    if(p.equals("DAMAGE_ALL")) {
+	        for(EntityDamageEvent.DamageCause d : EntityDamageEvent.DamageCause.values()) {
+	            addProtection("DAMAGE_" + d.toString());
+	        }
+	        return;
+	    }
+	    
+		if(isValidProtection(p) && !protections.contains(p)) protections.add(p);
 	}
 	
 	public void removeProtection(String p) {
@@ -56,7 +75,7 @@ public class PowerArmourComponents {
 	}
 	
 	public boolean containsProtection(String p) {
-		return this.protections.contains(p);
+		return protections.contains(p);
 	}
 
 	private boolean isValidProtection(String p) {

@@ -93,9 +93,9 @@ public class PowerArmour extends JavaPlugin {
 		}
 		
 		for(String s : blocks) {
-			
-			System.out.println("Working on block " + s);
-			PowerArmourComponents pac = new PowerArmourComponents();
+		    
+			PowerArmourComponents pac = null;
+			pac = new PowerArmourComponents();
 			
 			pac.head = Material.valueOf(getConfiguration().getString("powerarmour." + s + ".equipment.head", "AIR"));
 			pac.body = Material.valueOf(getConfiguration().getString("powerarmour." + s + ".equipment.body", "AIR"));
@@ -105,15 +105,18 @@ public class PowerArmour extends JavaPlugin {
 			
 			pac.armourdamage = getConfiguration().getBoolean("powerarmour." + s + ".armourdamage", false);
 			
-			List<Object> o = getConfiguration().getList("powerarmour." + s + ".protections");
+			List<Object> o = getConfiguration().getList("powerarmour." + s + ".protection");
 			
-			for(Object k : o) pac.addProtection((String) k);
+			if(o != null) {
+			    for(Object k : o) pac.addProtection((String) k);
+			} else {
+			    log.warning(getDescription().getName() + ": no protection found in " + s);
+			    continue;
+			}
 			
 			armourList.put(s, pac);
 			
 			if(verbosity  > 1) log.info("PowerArmour ability " + s + " is enabled.");
-			
-			pac = null;
 		}
 		
 		PluginManager pm = getServer().getPluginManager();
