@@ -20,6 +20,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.sargant.bukkit.powerarmour.PowerArmour;
@@ -28,7 +29,7 @@ public class PowerArmourEntityListener extends EntityListener
 {
 	private PowerArmour parent;
 
-	public PowerArmourEntityListener(PowerArmour instance) {
+	public PowerArmourEntityListener(PowerArmour instance) { 
 		parent = instance;
 	}
 
@@ -36,7 +37,7 @@ public class PowerArmourEntityListener extends EntityListener
 	public void onEntityDamage(EntityDamageEvent event) {
 		
 		if(event.isCancelled()) return;
-		if(!(event.getEntity() instanceof HumanEntity)) return;
+		if(!(event.getEntity() instanceof Player)) return;
 
 		Player human = (Player) event.getEntity();
 		PowerArmourComponents loadout = new PowerArmourComponents();
@@ -47,23 +48,25 @@ public class PowerArmourEntityListener extends EntityListener
 		loadout.feet = human.getInventory().getBoots().getType();
 		loadout.hand = human.getItemInHand().getType();
 
-		for(PowerArmourAbilities a : parent.armourList.keySet()) {
+		for(String name : parent.armourList.keySet()) {
 			
-			PowerArmourComponents c = parent.armourList.get(a);
+			PowerArmourComponents c = parent.armourList.get(name);
 
 			// Check loadout matches
-			if(!c.compare(loadout)) continue;
+			if(!c.compareComponents(c)) continue;
 
 			// The loadout is correct for the current power ability
 			// Does the current damage type match a corresponding proof-ness?
-			if(a.getAbilities().contains(event.getCause())) {
+			DamageCause d =  event.getCause();
+			
+			if(d == DamageCause.FIRE_TICK) d = DamageCause.FIRE;
+			
+			if(c.containsProtection("DAMAGE_" + d.toString())) {
 				
 				event.setCancelled(true);
 				
 				// Reset ticker on fire-based events
-				if(event.getCause().toString().toUpperCase().contains("FIRE")) {
-					human.setFireTicks(0);
-				}
+				if(d == DamageCause.FIRE) human.setFireTicks(0);
 				
 				// Increase armour / tool damage 
 				if(c.armourdamage) {

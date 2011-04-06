@@ -16,30 +16,26 @@
 
 package com.sargant.bukkit.powerarmour;
 
+import java.util.List;
+
 import org.bukkit.Material;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class PowerArmourComponents {
+	
 	public Material head;
 	public Material body;
 	public Material legs;
 	public Material feet;
 	public Material hand;
+	
 	public Boolean armourdamage;
 	
-	public String toString() {
-		
-		String retval = "{";
-		
-		retval += "head=" + head + ";";
-		retval += "body=" + body + ";";
-		retval += "legs=" + legs + ";";
-		retval += "feet=" + feet + ";";
-		retval += "hand=" + hand + "}";
-		
-		return retval;
-	}
+	private List<String> protections;
 	
-	public boolean compare(PowerArmourComponents test) {
+	public boolean compareComponents(PowerArmourComponents test) {
+		
+		if(test == null) return false;
 	    
 	    if(this.head != Material.AIR && this.head != test.head) return false;
 	    if(this.body != Material.AIR && this.body != test.body) return false;
@@ -49,5 +45,31 @@ public class PowerArmourComponents {
 	    
 	    return true;
 	    
+	}
+	
+	public void addProtection(String p) {
+		if(this.isValidProtection(p) && !this.protections.contains(p)) this.protections.add(p);
+	}
+	
+	public void removeProtection(String p) {
+		this.protections.remove(p);
+	}
+	
+	public boolean containsProtection(String p) {
+		return this.protections.contains(p);
+	}
+
+	private boolean isValidProtection(String p) {
+		
+		if(p.startsWith("DAMAGE_")) {
+			try {
+				DamageCause.valueOf(p.substring(7));
+				return true;
+			} catch(NullPointerException ex) {
+				return false;
+			}
+		}
+		
+		return false;
 	}
 }

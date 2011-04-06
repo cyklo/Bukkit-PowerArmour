@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
@@ -29,11 +28,11 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
-import com.sargant.bukkit.common.Common;
+import com.sargant.bukkit.common.*;
 
 public class PowerArmour extends JavaPlugin {
 	
-	protected Map<PowerArmourAbilities, PowerArmourComponents> armourList;
+	protected HashMap<String, PowerArmourComponents> armourList;
 	protected final Logger log;
 	protected Integer verbosity;
 	protected Priority pri;
@@ -44,7 +43,7 @@ public class PowerArmour extends JavaPlugin {
 		verbosity = 2;
 		pri = Priority.Lowest;
 		entityListener = new PowerArmourEntityListener(this);
-		armourList = new HashMap<PowerArmourAbilities, PowerArmourComponents>();
+		armourList = new HashMap<String, PowerArmourComponents>();
 	}
 
 	@Override
@@ -71,42 +70,50 @@ public class PowerArmour extends JavaPlugin {
 		}
 		
 		// Load in the values from the configuration file
-		verbosity = Common.getVerbosity(this);
-		pri = Common.getPriority(this);
+		verbosity = CommonPlugin.getVerbosity(this);
+		pri = CommonPlugin.getPriority(this);
 		
-		List <String> keys = Common.getRootKeys(this);
+		List <String> keys = CommonPlugin.getRootKeys(this);
 		
 		if(keys == null) {
 			log.warning(getDescription().getName() + ": no parent key not found");
 			return;
 		}
 		
-		if(!keys.contains("powerarmour"))
-		{
+		if(!keys.contains("powerarmour")) {
 			log.warning(getDescription().getName() + ": no 'powerarmour' key found");
 			return;
 		}
 		
-		for(PowerArmourAbilities paa : PowerArmourAbilities.values()) {
+		List<String> blocks = getConfiguration().getKeys("powerarmour");
+		
+		if(blocks == null) {
+			log.warning(getDescription().getName() + ": no definition blocks found!");
+			return;
+		}
+		
+		for(String s : blocks) {
 			
-			if(!getConfiguration().getKeys("powerarmour").contains(paa.toString())) {
-				continue;
-			}
-			
+			System.out.println("Working on block " + s);
 			PowerArmourComponents pac = new PowerArmourComponents();
 			
-			pac.head = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".head", "AIR"));
-			pac.body = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".body", "AIR"));
-			pac.legs = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".legs", "AIR"));
-			pac.feet = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".feet", "AIR"));
-			pac.hand = Material.valueOf(getConfiguration().getString("powerarmour." + paa.toString() + ".hand", "AIR"));
-			pac.armourdamage = getConfiguration().getBoolean("powerarmour." + paa.toString() + ".armourdamage", false);
+			pac.head = Material.valueOf(getConfiguration().getString("powerarmour." + s + ".equipment.head", "AIR"));
+			pac.body = Material.valueOf(getConfiguration().getString("powerarmour." + s + ".equipment.body", "AIR"));
+			pac.legs = Material.valueOf(getConfiguration().getString("powerarmour." + s + ".equipment.legs", "AIR"));
+			pac.feet = Material.valueOf(getConfiguration().getString("powerarmour." + s + ".equipment.feet", "AIR"));
+			pac.hand = Material.valueOf(getConfiguration().getString("powerarmour." + s + ".equipment.hand", "AIR"));
 			
-			armourList.put(paa, pac);
+			pac.armourdamage = getConfiguration().getBoolean("powerarmour." + s + ".armourdamage", false);
 			
-			if(verbosity > 1) {
-				log.info("Power ability " + paa.toString() + " is enabled.");
-			}
+			List<Object> o = getConfiguration().getList("powerarmour." + s + ".protections");
+			
+			for(Object k : o) pac.addProtection((String) k);
+			
+			armourList.put(s, pac);
+			
+			if(verbosity  > 1) log.info("PowerArmour ability " + s + " is enabled.");
+			
+			pac = null;
 		}
 		
 		PluginManager pm = getServer().getPluginManager();
