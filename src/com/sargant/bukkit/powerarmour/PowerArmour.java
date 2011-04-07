@@ -23,8 +23,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
@@ -121,7 +123,59 @@ public class PowerArmour extends JavaPlugin {
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, pri, this);
+		pm.registerEvent(Event.Type.ENTITY_TARGET, entityListener, pri, this);
 		
 		log.info(getDescription().getName() + " " + getDescription().getVersion() + " loaded.");
 	}
+	
+    protected void runDamages(PlayerInventory i, Integer dmg) {
+        
+        // Helmet
+        i.getHelmet().setDurability((short) (i.getHelmet().getDurability() + dmg));
+        if(i.getHelmet().getDurability() > i.getHelmet().getType().getMaxDurability()) {
+            i.setHelmet(null);
+        }
+        
+        // Chestplate
+        i.getChestplate().setDurability((short) (i.getChestplate().getDurability() + dmg));
+        if(i.getChestplate().getDurability() > i.getChestplate().getType().getMaxDurability()) {
+            i.setChestplate(null);
+        }
+        
+        // Leggings
+        i.getLeggings().setDurability((short) (i.getLeggings().getDurability() + dmg));
+        if(i.getLeggings().getDurability() > i.getLeggings().getType().getMaxDurability()) {
+            i.setLeggings(null);
+        }
+        
+        // Boots
+        i.getBoots().setDurability((short) (i.getBoots().getDurability() + dmg));
+        if(i.getBoots().getDurability() > i.getBoots().getType().getMaxDurability()) {
+            i.setBoots(null);
+        }
+    }
+    
+    protected PowerArmourComponents getLoadout(Player player) {
+        PowerArmourComponents loadout = new PowerArmourComponents();
+        loadout.head = player.getInventory().getHelmet().getType();
+        loadout.body = player.getInventory().getChestplate().getType();
+        loadout.legs = player.getInventory().getLeggings().getType();
+        loadout.feet = player.getInventory().getBoots().getType();
+        loadout.hand = player.getItemInHand().getType();
+        return loadout;
+    }
+    
+    protected boolean isWearerProtected(PowerArmourComponents loadout, String damageEvent) {
+        
+        for(String name : this.armourList.keySet()) {    
+            PowerArmourComponents c = this.armourList.get(name);
+            // Check loadout matches
+            if(!c.compareComponents(loadout)) continue;
+            if(c.containsProtection(damageEvent)) {
+                loadout.armourdamage = c.armourdamage;
+                return true;
+            }
+        }
+        return false;
+    }
 }

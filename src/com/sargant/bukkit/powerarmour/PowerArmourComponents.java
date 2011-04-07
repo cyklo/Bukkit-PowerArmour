@@ -89,6 +89,8 @@ public class PowerArmourComponents {
 			}
 		}
 		
+		if(p.contentEquals("ENTITY_TARGET")) return true;
+		
 		return false;
 	}
 }

@@ -18,7 +18,6 @@ package com.sargant.bukkit.powerarmour;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.*;
-import org.bukkit.inventory.PlayerInventory;
 
 import com.sargant.bukkit.powerarmour.PowerArmour;
 
@@ -37,67 +36,36 @@ public class PowerArmourEntityListener extends EntityListener
 		if(!(event.getEntity() instanceof Player)) return;
 
 		Player human = (Player) event.getEntity();
-		PowerArmourComponents loadout = new PowerArmourComponents();
+		PowerArmourComponents loadout = parent.getLoadout(human); 
 
-		loadout.head = human.getInventory().getHelmet().getType();
-		loadout.body = human.getInventory().getChestplate().getType();
-		loadout.legs = human.getInventory().getLeggings().getType();
-		loadout.feet = human.getInventory().getBoots().getType();
-		loadout.hand = human.getItemInHand().getType();
-
-		for(String name : parent.armourList.keySet()) {
-			
-			PowerArmourComponents c = parent.armourList.get(name);
-
-			// Check loadout matches
-			if(!c.compareComponents(loadout)) continue;
-
-			// The loadout is correct for the current power ability
-			// Does the current damage type match a corresponding proof-ness?
-			EntityDamageEvent.DamageCause d =  event.getCause();
-			
-			if(d == EntityDamageEvent.DamageCause.FIRE_TICK) d = EntityDamageEvent.DamageCause.FIRE;
-			
-			if(c.containsProtection("DAMAGE_" + d.toString())) {
-				
-				event.setCancelled(true);
-				
-				// Reset ticker on fire-based events
-				if(d == EntityDamageEvent.DamageCause.FIRE) human.setFireTicks(0);
-				
-				// Increase armour / tool damage 
-				if(c.armourdamage) runDamages(human.getInventory(), event.getDamage());
-				
-				return;
-			}
-		}
+		EntityDamageEvent.DamageCause d =  event.getCause();
+        
+		// Compress FIRE_TICK and FIRE into one event
+        if(d == EntityDamageEvent.DamageCause.FIRE_TICK) d = EntityDamageEvent.DamageCause.FIRE;
+        
+        if(parent.isWearerProtected(loadout, "DAMAGE_" + d.toString())) {   
+            
+            event.setCancelled(true);
+            // Reset ticker on fire-based events
+            if(d == EntityDamageEvent.DamageCause.FIRE) human.setFireTicks(0);
+                
+            // Increase armour / tool damage 
+            if(loadout.armourdamage) parent.runDamages(human.getInventory(), event.getDamage());
+        }
 	}
 	
-	private void runDamages(PlayerInventory i, Integer dmg) {
-        
-        // Helmet
-        i.getHelmet().setDurability((short) (i.getHelmet().getDurability() + dmg));
-        if(i.getHelmet().getDurability() > i.getHelmet().getType().getMaxDurability()) {
-            i.setHelmet(null);
-        }
-        
-        // Chestplate
-        i.getChestplate().setDurability((short) (i.getChestplate().getDurability() + dmg));
-        if(i.getChestplate().getDurability() > i.getChestplate().getType().getMaxDurability()) {
-            i.setChestplate(null);
-        }
-        
-        // Leggings
-        i.getLeggings().setDurability((short) (i.getLeggings().getDurability() + dmg));
-        if(i.getLeggings().getDurability() > i.getLeggings().getType().getMaxDurability()) {
-            i.setLeggings(null);
-        }
-        
-        // Boots
-        i.getBoots().setDurability((short) (i.getBoots().getDurability() + dmg));
-        if(i.getBoots().getDurability() > i.getBoots().getType().getMaxDurability()) {
-            i.setBoots(null);
-        }
+	@Override
+	public void onEntityTarget(EntityTargetEvent event) {
+	    
+	    if(event.isCancelled()) return;
+	    if(!(event.getTarget() instanceof Player)) return;
+	    
+	    Player human = (Player) event.getTarget();
+	    PowerArmourComponents loadout = parent.getLoadout(human);
+	    
+	    if(parent.isWearerProtected(loadout, "ENTITY_TARGET")) event.setCancelled(true);
 	}
+	
+	
 }
 
